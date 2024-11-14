@@ -89,15 +89,6 @@ def buy(pair_address: str, sol_in: float = .01, slippage: int = 5) -> bool:
                 owner=payer_keypair.pubkey()
             )
         )
-        
-        print("Funding WSOL account...")
-        fund_wsol_account_instr = transfer(
-            TransferParams(
-                from_pubkey=payer_keypair.pubkey(),
-                to_pubkey=wsol_token_account,
-                lamports=int(amount_in)
-            )
-        )
 
         print("Creating swap instructions...")
         swap_instructions = make_swap_instruction(amount_in, minimum_amount_out, wsol_token_account, token_account, pool_keys, payer_keypair)
@@ -109,8 +100,7 @@ def buy(pair_address: str, sol_in: float = .01, slippage: int = 5) -> bool:
             set_compute_unit_limit(UNIT_BUDGET),
             set_compute_unit_price(UNIT_PRICE),
             create_wsol_account_instr,
-            init_wsol_account_instr,
-            fund_wsol_account_instr
+            init_wsol_account_instr
         ]
         
         if token_account_instr:
